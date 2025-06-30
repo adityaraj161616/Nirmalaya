@@ -19,7 +19,7 @@ const Index = () => {
       // Split text animation for hero title
       const splitText = (element: Element, className: string) => {
         const text = element.textContent || '';
-        element.innerHTML = text.split('').map(char => 
+        element.innerHTML = text.split('').map(char =>
           `<span class="${className}">${char === ' ' ? '&nbsp;' : char}</span>`
         ).join('');
       };
@@ -27,33 +27,33 @@ const Index = () => {
       document.querySelectorAll('.split-text').forEach(el => splitText(el, 'char'));
 
       // Hero Animations - More advanced
-      gsap.fromTo('.char', 
+      gsap.fromTo('.char',
         { opacity: 0, y: 100, rotationX: 90 },
-        { 
-          opacity: 1, 
-          y: 0, 
+        {
+          opacity: 1,
+          y: 0,
           rotationX: 0,
-          duration: 0.8, 
+          duration: 0.8,
           stagger: 0.02,
           ease: 'back.out(1.7)',
           delay: 0.5
         }
       );
-      
+
       // Liquid morphing animation
-      gsap.fromTo('.liquid-hero', 
-        { 
+      gsap.fromTo('.liquid-hero',
+        {
           clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
           scale: 0.8,
           opacity: 0
         },
-        { 
+        {
           clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
           scale: 1,
           opacity: 1,
-          duration: 1.5, 
+          duration: 1.5,
           delay: 0.8,
-          ease: 'power3.out' 
+          ease: 'power3.out'
         }
       );
 
@@ -74,10 +74,10 @@ const Index = () => {
       // Scroll-triggered reveals with more sophisticated timing
       const revealElements = gsap.utils.toArray('.reveal-element');
       revealElements.forEach((element: any, index) => {
-        gsap.fromTo(element, 
-          { 
-            y: 100, 
-            opacity: 0, 
+        gsap.fromTo(element,
+          {
+            y: 100,
+            opacity: 0,
             scale: 0.8,
             rotationY: 45
           },
@@ -115,7 +115,7 @@ const Index = () => {
       // Treatment cards with advanced hover animations
       document.querySelectorAll('.advanced-card').forEach(card => {
         const tl = gsap.timeline({ paused: true });
-        
+
         tl.to(card, {
           y: -20,
           scale: 1.05,
@@ -130,9 +130,9 @@ const Index = () => {
       });
 
       // Staggered stats animation
-      gsap.fromTo('.stat-number', 
+      gsap.fromTo('.stat-number',
         { innerHTML: 0 },
-        { 
+        {
           innerHTML: (i, target) => target.dataset.value,
           duration: 2,
           ease: 'power2.out',
@@ -147,7 +147,7 @@ const Index = () => {
 
       // Image parallax effects
       gsap.utils.toArray('.parallax-image').forEach((img: any) => {
-        gsap.fromTo(img, 
+        gsap.fromTo(img,
           { y: -50, scale: 1.1 },
           {
             y: 50,
@@ -163,12 +163,12 @@ const Index = () => {
 
       // Page transitions
       gsap.set('.page-transition', { scaleX: 0 });
-      
+
       document.querySelectorAll('a[href^="/"]').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const href = (e.target as HTMLAnchorElement).getAttribute('href');
-          
+
           gsap.to('.page-transition', {
             scaleX: 1,
             duration: 0.5,
@@ -197,7 +197,7 @@ const Index = () => {
     {
       name: 'Abhyanga Massage',
       description: 'Full body oil massage for deep relaxation',
-      duration: '60 min', 
+      duration: '60 min',
       price: '₹9,600',
       icon: '💆‍♀️',
       gradient: 'from-blue-400 to-indigo-600'
@@ -220,6 +220,20 @@ const Index = () => {
     }
   ];
 
+  const animatedNavigate = (to: string) => {
+    gsap.to('.page-transition', {
+      scaleX: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        navigate(to);
+        setTimeout(() => {
+          gsap.set('.page-transition', { scaleX: 0 });
+        }, 300);
+      }
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 relative overflow-hidden font-inter">
       {/* Page Transition Overlay */}
@@ -228,10 +242,10 @@ const Index = () => {
       {/* Infinite Scroll Text */}
       <div className="overflow-hidden whitespace-nowrap bg-emerald-600 text-white py-3 text-sm font-medium tracking-wider">
         <div className="infinite-scroll inline-block">
-          ✨ Ancient Wisdom • Modern Healing • Natural Wellness • Ayurvedic Excellence • Mind Body Soul • 
+          ✨ Ancient Wisdom • Modern Healing • Natural Wellness • Ayurvedic Excellence • Mind Body Soul •
         </div>
       </div>
-      
+
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl z-40 shadow-sm border-b border-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -259,13 +273,14 @@ const Index = () => {
                 Contact
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 transition-all group-hover:w-full" />
               </a>
-              <Link 
-                to="/book/step-1" 
+              <button
+                type="button"
                 className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-10 py-4 rounded-full hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group font-bold text-lg tracking-wide"
+                onClick={() => animatedNavigate('/book/step-1')}
               >
                 <span className="relative z-10">Book Now</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -299,7 +314,7 @@ const Index = () => {
                   <span className="split-text block bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Naturally</span>
                 </h1>
               </div>
-              
+
               <div className="reveal-element">
                 <p className="text-2xl text-gray-600 leading-relaxed max-w-xl font-light tracking-wide">
                   Experience the transformative power of ancient Ayurvedic wisdom combined with modern wellness practices. Your journey to holistic health starts here.
@@ -307,18 +322,19 @@ const Index = () => {
               </div>
 
               <div className="reveal-element flex flex-col sm:flex-row gap-8">
-                <Link 
-                  to="/book/step-1"
+                <button
+                  type="button"
                   className="group relative inline-flex items-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-12 py-6 rounded-2xl text-xl font-bold hover:shadow-2xl transition-all duration-500 overflow-hidden tracking-wide"
+                  onClick={() => animatedNavigate('/book/step-1')}
                 >
                   <span className="relative z-10 flex items-center">
                     Begin Your Journey
                     <ArrowRight className="ml-4 h-7 w-7 group-hover:translate-x-2 transition-transform" />
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                </Link>
-                
-                <Link 
+                </button>
+
+                <Link
                   to="/discover-more"
                   className="group inline-flex items-center border-2 border-emerald-600 text-emerald-600 px-12 py-6 rounded-2xl text-xl font-bold hover:bg-emerald-50 transition-all duration-300 tracking-wide"
                 >
@@ -331,7 +347,7 @@ const Index = () => {
             <div className="reveal-element relative">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-500 rounded-3xl blur-3xl opacity-30 animate-pulse"></div>
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                   alt="Ayurvedic Treatment"
                   className="parallax-image relative rounded-3xl shadow-2xl w-full h-96 object-cover transform hover:scale-105 transition-transform duration-700"
@@ -368,7 +384,7 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="reveal-element group">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                   alt="Ayurvedic Herbs"
                   className="parallax-image w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -383,7 +399,7 @@ const Index = () => {
 
             <div className="reveal-element group">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                   alt="Meditation Space"
                   className="parallax-image w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -398,7 +414,7 @@ const Index = () => {
 
             <div className="reveal-element group">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                   alt="Natural Therapy"
                   className="parallax-image w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -451,7 +467,7 @@ const Index = () => {
               </p>
             </div>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
             {treatments.map((treatment, index) => (
               <div key={index} className={`advanced-card reveal-element group bg-gradient-to-br ${treatment.gradient} rounded-3xl p-10 text-white relative overflow-hidden cursor-pointer`}>
@@ -469,7 +485,7 @@ const Index = () => {
                     </span>
                     <span className="font-black text-3xl tracking-tight">{treatment.price}</span>
                   </div>
-                  <Link 
+                  <Link
                     to="/book/step-1"
                     className="w-full bg-white/20 backdrop-blur-sm text-white py-5 px-8 rounded-xl hover:bg-white/30 transition-all duration-300 text-center block font-bold text-lg group-hover:transform group-hover:scale-105 tracking-wide"
                   >
@@ -519,7 +535,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative reveal-element">
-              <img 
+              <img
                 src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
                 alt="Mountain Serenity"
                 className="parallax-image rounded-2xl shadow-2xl"
@@ -541,7 +557,7 @@ const Index = () => {
             <p className="text-2xl text-green-100 leading-relaxed max-w-3xl mx-auto font-light tracking-wide">
               Take the first step towards natural wellness. Book your consultation today and discover the transformative power of Ayurveda.
             </p>
-            <Link 
+            <Link
               to="/book/step-1"
               className="inline-flex items-center bg-white text-green-600 px-12 py-6 rounded-full text-xl font-bold hover:bg-green-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl tracking-wide"
             >
@@ -556,7 +572,7 @@ const Index = () => {
       <footer id="contact" className="bg-gray-900 text-white relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-emerald-900 opacity-50" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Main Footer Content */}
           <div className="py-20 grid lg:grid-cols-4 md:grid-cols-2 gap-16">
@@ -602,7 +618,7 @@ const Index = () => {
                   { name: 'Contact', href: '#contact' }
                 ].map((link, index) => (
                   <li key={index}>
-                    <a 
+                    <a
                       href={link.href}
                       className="text-gray-300 hover:text-emerald-400 transition-colors duration-300 flex items-center group py-3 px-4 rounded-lg hover:bg-emerald-400/10 border border-transparent hover:border-emerald-400/20 text-lg font-medium tracking-wide"
                     >
@@ -612,7 +628,7 @@ const Index = () => {
                   </li>
                 ))}
                 <li>
-                  <Link 
+                  <Link
                     to="/book/step-1"
                     className="text-gray-300 hover:text-emerald-400 transition-colors duration-300 flex items-center group py-3 px-4 rounded-lg hover:bg-emerald-400/10 border border-transparent hover:border-emerald-400/20 text-lg font-medium tracking-wide"
                   >
@@ -635,7 +651,7 @@ const Index = () => {
                   'Yoga & Meditation'
                 ].map((service, index) => (
                   <li key={index}>
-                    <Link 
+                    <Link
                       to="/book/step-1"
                       className="text-gray-300 hover:text-emerald-400 transition-colors duration-300 flex items-center group py-3 px-4 rounded-lg hover:bg-emerald-400/10 border border-transparent hover:border-emerald-400/20 text-lg font-medium tracking-wide"
                     >
@@ -660,14 +676,14 @@ const Index = () => {
                     <p className="text-gray-300 text-lg font-medium">Mumbai, Maharashtra 400001</p>
                   </div>
                 </div>
-                
+
                 <a href="tel:+919876543210" className="flex items-center space-x-5 group hover:text-emerald-400 transition-colors p-5 rounded-lg hover:bg-emerald-400/5 border border-transparent hover:border-emerald-400/20">
                   <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
                     <Phone className="h-6 w-6" />
                   </div>
                   <span className="text-lg font-medium tracking-wide">+91 98765 43210</span>
                 </a>
-                
+
                 <a href="mailto:hello@niramaya.com" className="flex items-center space-x-5 group hover:text-emerald-400 transition-colors p-5 rounded-lg hover:bg-emerald-400/5 border border-transparent hover:border-emerald-400/20">
                   <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
                     <Mail className="h-6 w-6" />
@@ -676,7 +692,7 @@ const Index = () => {
                 </a>
 
                 <div className=" text-center mt-10">
-                  <Link 
+                  <Link
                     to="/book/step-1"
                     className="inline-flex items-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-4 rounded-xl font-bold hover:scale-105 transition-all duration-300 group border border-emerald-400/20 text-lg tracking-wide"
                   >
@@ -694,8 +710,8 @@ const Index = () => {
               <h4 className="text-3xl font-black mb-6 text-emerald-400 tracking-tight">Stay Connected</h4>
               <p className="text-gray-300 mb-10 text-xl font-light tracking-wide">Get wellness tips and exclusive offers delivered to your inbox</p>
               <div className="flex flex-col sm:flex-row gap-6 max-w-lg mx-auto">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   placeholder="Enter your email"
                   className="flex-1 px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-lg font-medium"
                 />
@@ -717,7 +733,7 @@ const Index = () => {
                   <a href="/terms" className="text-gray-400 hover:text-emerald-400 transition-colors py-3 px-4 rounded-lg hover:bg-emerald-400/10 border border-transparent hover:border-emerald-400/20 font-medium">Terms of Service</a>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-8">
                 <div className="flex items-center space-x-3 text-gray-400 py-3 px-5 rounded-lg bg-emerald-400/5 border border-emerald-400/20">
                   <Shield className="h-5 w-5 text-emerald-400" />
