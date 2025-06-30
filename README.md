@@ -1,73 +1,78 @@
-# Welcome to your Lovable project
+# Nirmaalalya
 
-## Project info
+A modern web application for booking wellness and Ayurvedic treatments.
 
-**URL**: https://lovable.dev/projects/3971f3d5-e271-4d18-8a4c-bc6720530364
+## Features
 
-## How can I edit this code?
+- **Appointment Booking:**  
+  Users can easily book appointments for various wellness and Ayurvedic treatments through a simple and intuitive interface.
 
-There are several ways of editing your application.
+- **Booking Slip Generation:**  
+  After booking, the app generates a detailed booking slip with all relevant appointment information for the user.
 
-**Use Lovable**
+- **Booking Confirmation Emails:**  
+  Both the client and the doctor receive automated booking confirmation emails with all appointment details, ensuring clear communication and reducing no-shows.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3971f3d5-e271-4d18-8a4c-bc6720530364) and start prompting.
+- **Advanced Animations:**  
+  The app leverages advanced GSAP (GreenSock Animation Platform) animations throughout the user interface, providing a smooth and engaging user experience.
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
+## Technologies Used
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- GSAP (GreenSock Animation Platform)
+- Supabase (for backend and authentication)
 
-## How can I deploy this project?
+## Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/3971f3d5-e271-4d18-8a4c-bc6720530364) and click on Share -> Publish.
+### Prerequisites
 
-## Can I connect a custom domain to my Lovable project?
+- [Node.js](https://nodejs.org/) (v16+ recommended)
+- [npm](https://www.npmjs.com/)
 
-Yes, you can!
+### Installation
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```sh
+git clone <YOUR_GIT_URL>
+cd <YOUR_PROJECT_NAME>
+npm install
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Running the Development Server
+
+```sh
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Building for Production
+
+```sh
+npm run build
+```
+
+The output will be in the `dist/` directory.
+
+## Project Structure
+
+```
+.
+├── public/             # Static assets
+├── src/                # Source code
+│   ├── components/     # Reusable UI components
+│   ├── hooks/          # Custom React hooks
+│   ├── integrations/   # Third-party integrations (e.g., Supabase)
+│   ├── lib/            # Utility functions
+│   └── pages/          # Application pages
+├── package.json        # Project metadata and scripts
+├── tailwind.config.ts  # Tailwind CSS configuration
+└── vite.config.ts      # Vite configuration
+```
+
+## Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.

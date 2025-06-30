@@ -9,6 +9,7 @@ import BookingStep1 from "./pages/BookingStep1";
 import BookingStep2 from "./pages/BookingStep2";
 import BookingStep3 from "./pages/BookingStep3";
 import BookingSuccess from "./pages/BookingSuccess";
+import DiscoverMore from "./pages/DiscoverMore";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/discover-more" element={<DiscoverMore />} />
           <Route path="/book/step-1" element={<BookingStep1 />} />
           <Route path="/book/step-2" element={<BookingStep2 />} />
           <Route path="/book/step-3" element={<BookingStep3 />} />

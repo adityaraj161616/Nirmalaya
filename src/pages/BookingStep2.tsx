@@ -79,15 +79,6 @@ const BookingStep2 = () => {
 
   const doctors: Doctor[] = [
     {
-      id: 'dr-patel',
-      name: 'Dr. Arjun Patel',
-      specialization: 'Mind & Spirit Wellness',
-      experience: '12 years',
-      rating: 4.9,
-      availability: ['shirodhara', 'consultation'],
-      image: 'https://plus.unsplash.com/premium_photo-1661686321968-98fc885d00b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fGRyfGVufDB8fDB8fHww'
-    },
-    {
       id: 'dr-sharma',
       name: 'Dr. Priya Sharma',
       specialization: 'Panchakarma & Detox',
@@ -97,13 +88,22 @@ const BookingStep2 = () => {
       image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80'
     },
     {
+      id: 'dr-patel',
+      name: 'Dr. Arjun Patel',
+      specialization: 'Mind & Spirit Wellness',
+      experience: '12 years',
+      rating: 4.8,
+      availability: ['shirodhara', 'consultation'],
+      image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80'
+    },
+    {
       id: 'dr-krishna',
       name: 'Dr. Maya Krishna',
       specialization: 'General Ayurvedic Practice',
       experience: '10 years',
       rating: 4.7,
       availability: ['abhyanga', 'consultation', 'panchakarma'],
-      image: 'https://plus.unsplash.com/premium_photo-1661341423936-40b48564a5bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fGRyfGVufDB8fDB8fHww'
+      image: 'https://images.unsplash.com/photo-1594824375160-ac0e3b5e0b7f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80'
     }
   ];
 

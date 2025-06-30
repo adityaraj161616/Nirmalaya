@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { ArrowLeft, CheckCircle, User, Calendar, Clock, Stethoscope, CreditCard, Loader } from 'lucide-react';
+import { ArrowLeft, CheckCircle, User, Calendar, Clock, Stethoscope, CreditCard, Loader, Download, Printer } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BookingSummary {
   patientInfo: {
@@ -26,6 +27,7 @@ const BookingStep3 = () => {
   const [bookingData, setBookingData] = useState<BookingSummary | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [bookingReference, setBookingReference] = useState<string>('');
 
   const treatments = {
     panchakarma: { name: 'Panchakarma Detox', price: 14400, duration: '90 min' },
@@ -105,27 +107,179 @@ const BookingStep3 = () => {
     return () => ctx.revert();
   }, [navigate]);
 
+  const generateAppointmentSlip = (appointmentData: any) => {
+    const slipContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Appointment Slip - Niramaya Wellness</title>
+        <style>
+          body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { color: #10b981; font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+          .subtitle { color: #6b7280; font-size: 14px; }
+          .section { margin-bottom: 25px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
+          .section h3 { color: #1f2937; margin-top: 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; }
+          .detail { margin: 8px 0; }
+          .reference { background: #10b981; color: white; padding: 8px 16px; border-radius: 6px; display: inline-block; font-weight: bold; }
+          .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; }
+          @media print { body { margin: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">🌿 Niramaya</div>
+          <div class="subtitle">Holistic Wellness Center</div>
+          <h2 style="color: #1f2937; margin-top: 20px;">Appointment Confirmation Slip</h2>
+        </div>
+        
+        <div class="section">
+          <h3>📋 Appointment Details</h3>
+          <div class="detail"><strong>Booking Reference:</strong> <span class="reference">${appointmentData.booking_reference}</span></div>
+          <div class="detail"><strong>Patient Name:</strong> ${appointmentData.full_name}</div>
+          <div class="detail"><strong>Treatment:</strong> ${appointmentData.treatment_type}</div>
+          <div class="detail"><strong>Date:</strong> ${appointmentData.preferred_date}</div>
+          <div class="detail"><strong>Time:</strong> ${appointmentData.preferred_time}</div>
+          <div class="detail"><strong>Phone:</strong> ${appointmentData.phone}</div>
+          <div class="detail"><strong>Email:</strong> ${appointmentData.email}</div>
+          ${appointmentData.special_requests ? `<div class="detail"><strong>Special Requests:</strong> ${appointmentData.special_requests}</div>` : ''}
+        </div>
+        
+        <div class="section">
+          <h3>📍 Location & Contact</h3>
+          <div class="detail"><strong>Address:</strong> 123 Wellness Street, Mumbai, Maharashtra 400001</div>
+          <div class="detail"><strong>Phone:</strong> +91 98765 43210</div>
+          <div class="detail"><strong>Email:</strong> hello@niramaya.com</div>
+        </div>
+        
+        <div class="section">
+          <h3>ℹ️ Important Instructions</h3>
+          <ul>
+            <li>Please arrive 15 minutes early for check-in</li>
+            <li>Bring comfortable clothing suitable for your treatment</li>
+            <li>Avoid heavy meals 2 hours before your appointment</li>
+            <li>Stay hydrated throughout the day</li>
+            <li>Bring this slip and a valid ID for verification</li>
+          </ul>
+        </div>
+        
+        <div class="footer">
+          <p>Thank you for choosing Niramaya Wellness Center</p>
+          <p>Your journey to wellness begins here 🙏</p>
+          <p>Generated on: ${new Date().toLocaleString()}</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(slipContent);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
+  };
+
+  const downloadAppointmentSlip = (appointmentData: any) => {
+    const slipContent = `
+NIRAMAYA WELLNESS CENTER
+🌿 Holistic Wellness Center
+========================
+
+APPOINTMENT CONFIRMATION SLIP
+============================
+
+Booking Reference: ${appointmentData.booking_reference}
+Patient Name: ${appointmentData.full_name}
+Treatment: ${appointmentData.treatment_type}
+Date: ${appointmentData.preferred_date}
+Time: ${appointmentData.preferred_time}
+Phone: ${appointmentData.phone}
+Email: ${appointmentData.email}
+${appointmentData.special_requests ? `Special Requests: ${appointmentData.special_requests}` : ''}
+
+LOCATION & CONTACT
+==================
+Address: 123 Wellness Street, Mumbai, Maharashtra 400001
+Phone: +91 98765 43210
+Email: hello@niramaya.com
+
+IMPORTANT INSTRUCTIONS
+======================
+• Please arrive 15 minutes early for check-in
+• Bring comfortable clothing suitable for your treatment
+• Avoid heavy meals 2 hours before your appointment
+• Stay hydrated throughout the day
+• Bring this slip and a valid ID for verification
+
+Thank you for choosing Niramaya Wellness Center
+Your journey to wellness begins here 🙏
+
+Generated on: ${new Date().toLocaleString()}
+    `;
+
+    const blob = new Blob([slipContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Niramaya_Appointment_${appointmentData.booking_reference}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   const handleConfirmBooking = async () => {
     if (!bookingData) return;
 
     setIsSubmitting(true);
 
-    // Prepare booking data
-    const bookingPayload = {
-      patientInfo: bookingData.patientInfo,
-      treatmentInfo: bookingData.treatmentInfo,
-      timestamp: new Date().toISOString(),
-      totalAmount: treatments[bookingData.treatmentInfo.treatment as keyof typeof treatments].price,
-      bookingId: `AYU-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-    };
-
     try {
-      // Mock API call - simulate booking submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Log booking for demo purposes
-      console.log('Booking submitted:', bookingPayload);
-      
+      // Prepare appointment data for Supabase
+      const appointmentData = {
+        full_name: `${bookingData.patientInfo.firstName} ${bookingData.patientInfo.lastName}`,
+        email: bookingData.patientInfo.email,
+        phone: bookingData.patientInfo.phone,
+        treatment_type: treatments[bookingData.treatmentInfo.treatment as keyof typeof treatments].name,
+        preferred_date: bookingData.treatmentInfo.date,
+        preferred_time: bookingData.treatmentInfo.time,
+        special_requests: `Age: ${bookingData.patientInfo.age}, Gender: ${bookingData.patientInfo.gender}, Doctor: ${doctors[bookingData.treatmentInfo.doctor as keyof typeof doctors]}`
+      };
+
+      // Insert appointment into Supabase
+      const { data: insertedData, error: insertError } = await supabase
+        .from('appointments')
+        .insert([appointmentData])
+        .select()
+        .single();
+
+      if (insertError) {
+        throw new Error(`Database error: ${insertError.message}`);
+      }
+
+      console.log('Appointment saved to database:', insertedData);
+      setBookingReference(insertedData.booking_reference);
+
+      // Send email notification
+      const emailResponse = await fetch('/functions/v1/send-appointment-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...appointmentData,
+          booking_reference: insertedData.booking_reference
+        })
+      });
+
+      if (!emailResponse.ok) {
+        console.warn('Email sending failed, but appointment was saved');
+      } else {
+        console.log('Email notifications sent successfully');
+      }
+
       // Show success animation
       gsap.to('.confirmation-container', {
         scale: 0.95,
@@ -144,10 +298,15 @@ const BookingStep3 = () => {
                 // Clear localStorage
                 localStorage.removeItem('ayursoothe-booking');
                 
-                // Navigate to success page after 2 seconds
+                // Navigate to success page after showing success
                 setTimeout(() => {
-                  navigate('/booking-success');
-                }, 2000);
+                  navigate('/booking-success', { 
+                    state: { 
+                      bookingReference: insertedData.booking_reference,
+                      appointmentData: { ...appointmentData, booking_reference: insertedData.booking_reference }
+                    }
+                  });
+                }, 3000);
               }
             }
           );
@@ -155,7 +314,7 @@ const BookingStep3 = () => {
       });
     } catch (error) {
       console.error('Booking error:', error);
-      alert('Booking failed. Please try again.');
+      alert(`Booking failed: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
       setIsSubmitting(false);
     }
   };
@@ -182,10 +341,14 @@ const BookingStep3 = () => {
             <CheckCircle className="h-12 w-12 text-green-600" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Booking Confirmed!</h2>
-          <p className="text-gray-600 mb-8">
-            Your appointment has been successfully booked. You will receive a confirmation email shortly.
+          <p className="text-gray-600 mb-4">
+            Your appointment has been successfully booked.
+          </p>
+          <p className="text-green-600 font-semibold mb-8">
+            Booking Reference: {bookingReference}
           </p>
           <div className="w-8 h-8 border-2 border-green-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-sm text-gray-500 mt-4">Redirecting to confirmation page...</p>
         </div>
       </div>
     );
@@ -374,7 +537,7 @@ const BookingStep3 = () => {
             )}
           </button>
           <p className="text-sm text-gray-500 mt-4">
-            Payment will be collected at the time of your appointment
+            You will receive email confirmation and can generate your appointment slip after booking
           </p>
         </div>
       </div>
